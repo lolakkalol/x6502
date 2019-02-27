@@ -215,3 +215,29 @@ case SMB6:
 case SMB7:
     m->mem[NEXT_BYTE(m)] |= 0x80;
     break;
+
+case TRB_AB:
+    arg1 = NEXT_BYTE(m);
+    arg2 = NEXT_BYTE(m);
+    set_flag(m, FLAG_ZERO, m->mem[mem_abs(arg1, arg2, 0)] & m->ac);
+    m->mem[mem_abs(arg1, arg2, 0)] &= ~m->ac;
+    break;
+
+case TRB_ZP:
+    t1 = NEXT_BYTE(m);
+    set_flag(m, FLAG_ZERO, m->mem[t1] & m->ac);
+    m->mem[t1] &= ~m->ac;
+    break;
+
+case TSB_AB:
+    arg1 = NEXT_BYTE(m);
+    arg2 = NEXT_BYTE(m);
+    set_flag(m, FLAG_ZERO, m->mem[mem_abs(arg1, arg2, 0)] & m->ac);
+    m->mem[mem_abs(arg1, arg2, 0)] |= m->ac;
+    break;
+
+case TSB_ZP:
+    t1 = NEXT_BYTE(m);
+    set_flag(m, FLAG_ZERO, m->mem[t1] & m->ac);
+    m->mem[t1] |= m->ac;
+    break;

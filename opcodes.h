@@ -252,6 +252,12 @@
 #define SMB6	0xE7
 #define SMB7	0xF7
 
+#define TRB_AB	0x1C
+#define TRB_ZP	0x14
+
+#define TSB_AB 	0x0C
+#define TSB_ZP	0x04
+
 #define WAI     0xCB
 #define STP 	0xDB
 
