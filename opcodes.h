@@ -116,6 +116,7 @@
 #define INY     0xC8
 
 #define JMP_AB  0x4C
+#define JMP_ABX 0x7C
 #define JMP_IN  0x6C
 
 #define JSR_AB  0x20

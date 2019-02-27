@@ -3,6 +3,11 @@ case JMP_AB:
     m->pc = mem_abs(arg1, NEXT_BYTE(m), 0);
     break;
 
+case JMP_ABX:
+    arg1 = NEXT_BYTE(m);
+    m->pc = mem_abs(arg1, NEXT_BYTE(m), m->x);
+    break;
+
 case JMP_IN:
     arg1 = NEXT_BYTE(m);
     r1 = mem_abs(arg1, NEXT_BYTE(m), 0);
