@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 def is_opcode(line):
     return line.startswith('#define') and 'OPCODE' not in line
 

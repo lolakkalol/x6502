@@ -1,7 +1,7 @@
 CC=clang
 COPTS=-o x6502 -O3 -lpthread -Wall -lncurses
 DEBUGOPTS=-DDEBUG -O0 -g
-PYTHON=python
+PYTHON=python2
 
 all: release
 
