@@ -1,3 +1,7 @@
+case INC_ACC:
+    set_flags(m, ++m->ac);
+    break;
+
 case INC_AB:
     arg1 = NEXT_BYTE(m);
     arg2 = NEXT_BYTE(m);
@@ -32,6 +36,10 @@ case INX:
 
 case INY:
     set_flags(m, ++m->y);
+    break;
+
+case DEC_ACC:
+    set_flags(m, --m->ac);
     break;
 
 case DEC_AB:

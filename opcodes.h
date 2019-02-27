@@ -90,6 +90,7 @@
 #define CPY_IMM 0xC0
 #define CPY_ZP  0xC4
 
+#define DEC_ACC 0x3A
 #define DEC_AB  0xCE
 #define DEC_ABX 0xDE
 #define DEC_ZP  0xC6
@@ -107,6 +108,7 @@
 #define EOR_ZP  0x45
 #define EOR_ZPX 0x55
 
+#define INC_ACC 0x1A
 #define INC_AB  0xEE
 #define INC_ABX 0xFE
 #define INC_ZP  0xE6
