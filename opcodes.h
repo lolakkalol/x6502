@@ -263,6 +263,11 @@
 #define STZ_ZP	0x64
 #define STZ_ZPX 0x74
 
+#define PHX		0xDA
+#define PHY		0x5A
+#define PLX		0xFA
+#define PLY 	0x7A
+
 #define WAI     0xCB
 #define STP 	0xDB
 
