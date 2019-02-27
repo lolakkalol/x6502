@@ -44,6 +44,11 @@ case AND_INY:
     set_flags(m, m->ac);
     break;
 
+case AND_INZP:
+    m->ac &= m->mem[mem_indirect_zp(m, NEXT_BYTE(m))];
+    set_flags(m, m->ac);
+    break;
+
 case EOR_IMM:
     m->ac ^= NEXT_BYTE(m);
     set_flags(m, m->ac);
@@ -90,6 +95,11 @@ case EOR_INY:
     set_flags(m, m->ac);
     break;
 
+case EOR_INZP:
+    m->ac ^= m->mem[mem_indirect_zp(m, NEXT_BYTE(m))];
+    set_flags(m, m->ac);
+    break;
+
 case ORA_IMM:
     m->ac |= NEXT_BYTE(m);
     set_flags(m, m->ac);
@@ -133,6 +143,11 @@ case ORA_INX:
 
 case ORA_INY:
     m->ac |= m->mem[mem_indirect_index(m, NEXT_BYTE(m), m->y)];
+    set_flags(m, m->ac);
+    break;
+
+case ORA_INZP:
+    m->ac |= m->mem[mem_indirect_zp(m, NEXT_BYTE(m))];
     set_flags(m, m->ac);
     break;
 

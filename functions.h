@@ -21,6 +21,10 @@ static inline size_t mem_indexed_indirect(cpu *m, uint8_t addr, uint8_t off) {
     return mem_abs(m->mem[addr+off], m->mem[addr+off+1], 0);
 }
 
+static inline size_t mem_indirect_zp(cpu *m, uint8_t addr) {
+    return mem_abs(m->mem[addr], m->mem[addr + 1], 0);
+}
+
 // set arg MUST be 16 bits, not 8, so that add results can fit into set.
 static inline void set_flag(cpu *m, uint8_t flag, uint16_t set) {
     if (set) {

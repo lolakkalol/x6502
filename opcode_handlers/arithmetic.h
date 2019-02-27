@@ -36,6 +36,10 @@ case ADC_ZPX:
     add(m, m->mem[ZP(NEXT_BYTE(m) + m->x)]);
     break;
 
+case ADC_INZP:
+    add(m, m->mem[mem_indirect_zp(m, NEXT_BYTE(m))]);
+    break;
+
 case SBC_AB:
     arg1 = NEXT_BYTE(m);
     arg2 = NEXT_BYTE(m);
@@ -72,4 +76,8 @@ case SBC_ZP:
 
 case SBC_ZPX:
     sub(m, m->mem[ZP(NEXT_BYTE(m) + m->x)]);
+    break;
+
+case SBC_INZP:
+    sub(m, m->mem[mem_indirect_zp(m, NEXT_BYTE(m))]);
     break;

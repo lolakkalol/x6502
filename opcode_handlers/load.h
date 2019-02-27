@@ -44,6 +44,10 @@ case LDA_ZPX:
     set_flags(m, m->ac);
     break;
 
+case LDA_INZP:
+    m->ac = m->mem[mem_indirect_zp(m, NEXT_BYTE(m))];
+    break;
+
 case LDX_AB:
     arg1 = NEXT_BYTE(m);
     arg2 = NEXT_BYTE(m);

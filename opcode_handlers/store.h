@@ -46,6 +46,12 @@ case STA_ZPX:
     mark_dirty(m, r1);
     break;
 
+case STA_INZP:
+    r1 = mem_indirect_zp(m, NEXT_BYTE(m));
+    m->mem[r1] = m->ac;
+    mark_dirty(m, r1);
+    break;
+
 case STX_ZP:
     r1 = ZP(NEXT_BYTE(m));
     m->mem[r1] = m->x;

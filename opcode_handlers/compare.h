@@ -36,6 +36,10 @@ case CMP_ZPX:
     cmp(m, m->mem[ZP(NEXT_BYTE(m) + m->x)], m->ac);
     break;
 
+case CMP_INZP:
+    cmp(m, m->mem[mem_indirect_zp(m, NEXT_BYTE(m))], m->ac);
+    break;
+
 case CPX_AB:
     arg1 = NEXT_BYTE(m);
     arg2 = NEXT_BYTE(m);
