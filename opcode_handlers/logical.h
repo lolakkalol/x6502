@@ -153,67 +153,99 @@ case BIT_ZP:
     break;
 
 case RMB0:
-    m->mem[NEXT_BYTE(m)] &= ~0x01;
+    r1 = ZP(NEXT_BYTE(m));
+    m->mem[r1] &= ~0x01;
+    mark_dirty(m, r1);
     break;
 
 case RMB1:
-    m->mem[NEXT_BYTE(m)] &= ~0x02;
+    r1 = ZP(NEXT_BYTE(m));
+    m->mem[r1] &= ~0x02;
+    mark_dirty(m, r1);
     break;
 
 case RMB2:
-    m->mem[NEXT_BYTE(m)] &= ~0x04;
+    r1 = ZP(NEXT_BYTE(m));
+    m->mem[r1] &= ~0x04;
+    mark_dirty(m, r1);
     break;
 
 case RMB3:
-    m->mem[NEXT_BYTE(m)] &= ~0x08;
+    r1 = ZP(NEXT_BYTE(m));
+    m->mem[r1] &= ~0x08;
+    mark_dirty(m, r1);
     break;
 
 case RMB4:
-    m->mem[NEXT_BYTE(m)] &= ~0x10;
+    r1 = ZP(NEXT_BYTE(m));
+    m->mem[r1] &= ~0x10;
+    mark_dirty(m, r1);
     break;
 
 case RMB5:
-    m->mem[NEXT_BYTE(m)] &= ~0x20;
+    r1 = ZP(NEXT_BYTE(m));
+    m->mem[r1] &= ~0x20;
+    mark_dirty(m, r1);
     break;
 
 case RMB6:
-    m->mem[NEXT_BYTE(m)] &= ~0x40;
+    r1 = ZP(NEXT_BYTE(m));
+    m->mem[r1] &= ~0x40;
+    mark_dirty(m, r1);
     break;
 
 case RMB7:
-    m->mem[NEXT_BYTE(m)] &= ~0x80;
+    r1 = ZP(NEXT_BYTE(m));
+    m->mem[r1] &= ~0x80;
+    mark_dirty(m, r1);
     break;
 
 case SMB0:
-    m->mem[NEXT_BYTE(m)] |= 0x01;
+    r1 = ZP(NEXT_BYTE(m));
+    m->mem[r1] |= 0x01;
+    mark_dirty(m, r1);
     break;
 
 case SMB1:
-    m->mem[NEXT_BYTE(m)] |= 0x02;
+    r1 = ZP(NEXT_BYTE(m));
+    m->mem[r1] |= 0x02;
+    mark_dirty(m, r1);
     break;
 
 case SMB2:
-    m->mem[NEXT_BYTE(m)] |= 0x04;
+    r1 = ZP(NEXT_BYTE(m));
+    m->mem[r1] |= 0x04;
+    mark_dirty(m, r1);
     break;
 
 case SMB3:
-    m->mem[NEXT_BYTE(m)] |= 0x08;
+    r1 = ZP(NEXT_BYTE(m));
+    m->mem[r1] |= 0x08;
+    mark_dirty(m, r1);
     break;
 
 case SMB4:
-    m->mem[NEXT_BYTE(m)] |= 0x10;
+    r1 = ZP(NEXT_BYTE(m));
+    m->mem[r1] |= 0x10;
+    mark_dirty(m, r1);
     break;
 
 case SMB5:
-    m->mem[NEXT_BYTE(m)] |= 0x20;
+    r1 = ZP(NEXT_BYTE(m));
+    m->mem[r1] |= 0x20;
+    mark_dirty(m, r1);
     break;
 
 case SMB6:
-    m->mem[NEXT_BYTE(m)] |= 0x40;
+    r1 = ZP(NEXT_BYTE(m));
+    m->mem[r1] |= 0x40;
+    mark_dirty(m, r1);
     break;
 
 case SMB7:
-    m->mem[NEXT_BYTE(m)] |= 0x80;
+    r1 = ZP(NEXT_BYTE(m));
+    m->mem[r1] |= 0x80;
+    mark_dirty(m, r1);
     break;
 
 case TRB_AB:
@@ -222,12 +254,14 @@ case TRB_AB:
     r1 = mem_abs(arg1, arg2, 0);
     set_flag(m, FLAG_ZERO, m->mem[r1] & m->ac);
     m->mem[r1] &= ~m->ac;
+    mark_dirty(m, r1);
     break;
 
 case TRB_ZP:
     r1 = ZP(NEXT_BYTE(m));
     set_flag(m, FLAG_ZERO, m->mem[r1] & m->ac);
     m->mem[r1] &= ~m->ac;
+    mark_dirty(m, r1);
     break;
 
 case TSB_AB:
@@ -236,10 +270,12 @@ case TSB_AB:
     r1 = mem_abs(arg1, arg2, 0);
     set_flag(m, FLAG_ZERO, m->mem[r1] & m->ac);
     m->mem[r1] |= m->ac;
+    mark_dirty(m, r1);
     break;
 
 case TSB_ZP:
     r1 = ZP(NEXT_BYTE(m));
     set_flag(m, FLAG_ZERO, m->mem[r1] & m->ac);
     m->mem[r1] |= m->ac;
+    mark_dirty(m, r1);
     break;

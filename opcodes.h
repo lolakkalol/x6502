@@ -258,6 +258,11 @@
 #define TSB_AB 	0x0C
 #define TSB_ZP	0x04
 
+#define STZ_AB	0x9C
+#define STZ_ABX	0x9E
+#define STZ_ZP	0x64
+#define STZ_ZPX 0x74
+
 #define WAI     0xCB
 #define STP 	0xDB
 
