@@ -38,8 +38,6 @@ typedef struct {
     uint8_t mem[MEMORY_SIZE];
     // stores the address of memory modified by the last instruction
     uint16_t dirty_mem_addr;
-    // the opcode of the last instruction run. for debugging only.
-    uint8_t last_opcode;
 } cpu;
 
 cpu * new_cpu(uint16_t pc_start);

@@ -28,10 +28,6 @@
 //      ZPX: zero-page,X, add next byte to X modulo 0xFF and use that as a
 //           memory address
 
-// custom instruction set extensions
-#define DUMP    0xFC
-#define EXT     0xFF
-
 #define ADC_AB  0x6D
 #define ADC_ABX 0x7D
 #define ADC_ABY 0x79
@@ -218,6 +214,45 @@
 #define TXS     0x9A
 #define TYA     0x98
 
+#define BRA  	0x80
+
+#define BBR0	0x0F
+#define BBR1	0x1F
+#define BBR2	0x2F
+#define BBR3	0x3F
+#define BBR4	0x4F
+#define BBR5	0x5F
+#define BBR6	0x6F
+#define BBR7	0x7F
+
+#define BBS0	0x8F
+#define BBS1	0x9F
+#define BBS2	0xAF
+#define BBS3	0xBF
+#define BBS4	0xCF
+#define BBS5	0xDF
+#define BBS6	0xEF
+#define BBS7	0xFF
+
+#define RMB0	0x07
+#define RMB1	0x17
+#define RMB2	0x27
+#define RMB3	0x37
+#define RMB4	0x47
+#define RMB5	0x57
+#define RMB6	0x67
+#define RMB7	0x77
+
+#define SMB0	0x87
+#define SMB1	0x97
+#define SMB2	0xA7
+#define SMB3	0xB7
+#define SMB4	0xC7
+#define SMB5	0xD7
+#define SMB6	0xE7
+#define SMB7	0xF7
+
 #define WAI     0xCB
+#define STP 	0xDB
 
 #endif

@@ -106,7 +106,6 @@ void handle_io(cpu *m) {
 
     if (get_emu_flag(m, EMU_FLAG_DIRTY)) {
         uint16_t addr = m->dirty_mem_addr;
-        debugf("dirty address %04X has value %02x\n", addr, m->mem[addr]);
 
         if (addr == IO_PUTCHAR) {
             if (io_modeflags & IO_MODEFLAG_VTERM) {
@@ -135,14 +134,12 @@ void handle_io(cpu *m) {
                     m->mem[IO_BLCK0_ADDRH] << 8 | m->mem[IO_BLCK0_ADDRL];
             int res = fseek(blck0, read_addr, SEEK_SET);
             if (res) {
-                debugf("ERROR: fseek returned %d\n", res);
                 m->mem[IO_BLCK0_ERR] = IO_BLCK_ERR_SEEK;
                 return;
             }
 
             res = fgetc(blck0);
             if (res == EOF) {
-                debugf("ERROR: fgetc returned EOF\n");
                 m->mem[IO_BLCK0_ERR] = IO_BLCK_ERR_EOF;
                 return;
             }

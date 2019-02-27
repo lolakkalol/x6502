@@ -1,7 +1,6 @@
 #include "emu.h"
 
 #include <stdio.h>
-#include "debug.h"
 #include "functions.h"
 #include "io.h"
 #include "opcodes.h"
@@ -29,8 +28,6 @@ void main_loop(cpu *m) {
     init_io();
 
     for (;;) {
-        DUMP_DEBUG(m);
-
         reset_emu_flags(m);
 
         pc_offset = 0;
@@ -39,18 +36,6 @@ void main_loop(cpu *m) {
         opcode = NEXT_BYTE(m);
 
         switch (opcode) {
-            case NOP:
-                break;
-
-#ifndef DISABLE_EXTENSIONS
-            case EXT:
-                goto end;
-
-            case DUMP:
-                dump_cpu(m);
-                break;
-#endif
-
             #include "opcode_handlers/arithmetic.h"
             #include "opcode_handlers/branch.h"
             #include "opcode_handlers/compare.h"
@@ -65,8 +50,12 @@ void main_loop(cpu *m) {
             #include "opcode_handlers/store.h"
             #include "opcode_handlers/transfer.h"
 
+            case NOP:
             default:
-                printf("ERROR: got unknown opcode %02x\n", opcode);
+                // Unknown opcodes are a NOP in the 65C02 processor family
+                break;
+            
+            case STP:
                 goto end;
         }
 
@@ -92,8 +81,6 @@ void main_loop(cpu *m) {
             m->pc = mem_abs(m->mem[0xFFFE], m->mem[0xFFFF], 0);
             m->sr |= FLAG_INTERRUPT;
         }
-
-        m->last_opcode = opcode;
     }
 end:
     finish_io();
