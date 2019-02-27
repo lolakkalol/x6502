@@ -151,3 +151,67 @@ case BIT_ZP:
     set_flag(m, FLAG_OVERFLOW, t1 & 0x40);
     set_flag(m, FLAG_NEGATIVE, t1 & 0x80);
     break;
+
+case RMB0:
+    m->mem[NEXT_BYTE(m)] &= ~0x01;
+    break;
+
+case RMB1:
+    m->mem[NEXT_BYTE(m)] &= ~0x02;
+    break;
+
+case RMB2:
+    m->mem[NEXT_BYTE(m)] &= ~0x04;
+    break;
+
+case RMB3:
+    m->mem[NEXT_BYTE(m)] &= ~0x08;
+    break;
+
+case RMB4:
+    m->mem[NEXT_BYTE(m)] &= ~0x10;
+    break;
+
+case RMB5:
+    m->mem[NEXT_BYTE(m)] &= ~0x20;
+    break;
+
+case RMB6:
+    m->mem[NEXT_BYTE(m)] &= ~0x40;
+    break;
+
+case RMB7:
+    m->mem[NEXT_BYTE(m)] &= ~0x80;
+    break;
+
+case SMB0:
+    m->mem[NEXT_BYTE(m)] |= 0x01;
+    break;
+
+case SMB1:
+    m->mem[NEXT_BYTE(m)] |= 0x02;
+    break;
+
+case SMB2:
+    m->mem[NEXT_BYTE(m)] |= 0x04;
+    break;
+
+case SMB3:
+    m->mem[NEXT_BYTE(m)] |= 0x08;
+    break;
+
+case SMB4:
+    m->mem[NEXT_BYTE(m)] |= 0x10;
+    break;
+
+case SMB5:
+    m->mem[NEXT_BYTE(m)] |= 0x20;
+    break;
+
+case SMB6:
+    m->mem[NEXT_BYTE(m)] |= 0x40;
+    break;
+
+case SMB7:
+    m->mem[NEXT_BYTE(m)] |= 0x80;
+    break;
