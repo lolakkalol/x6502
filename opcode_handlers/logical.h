@@ -225,9 +225,9 @@ case TRB_AB:
     break;
 
 case TRB_ZP:
-    t1 = NEXT_BYTE(m);
-    set_flag(m, FLAG_ZERO, m->mem[t1] & m->ac);
-    m->mem[t1] &= ~m->ac;
+    r1 = ZP(NEXT_BYTE(m));
+    set_flag(m, FLAG_ZERO, m->mem[r1] & m->ac);
+    m->mem[r1] &= ~m->ac;
     break;
 
 case TSB_AB:
@@ -239,7 +239,7 @@ case TSB_AB:
     break;
 
 case TSB_ZP:
-    t1 = NEXT_BYTE(m);
-    set_flag(m, FLAG_ZERO, m->mem[t1] & m->ac);
-    m->mem[t1] |= m->ac;
+    r1 = ZP(NEXT_BYTE(m));
+    set_flag(m, FLAG_ZERO, m->mem[r1] & m->ac);
+    m->mem[r1] |= m->ac;
     break;
