@@ -40,6 +40,6 @@ typedef struct {
     uint16_t dirty_mem_addr;
 } cpu;
 
-cpu * new_cpu(uint16_t pc_start);
+cpu * new_cpu();
 
 #endif

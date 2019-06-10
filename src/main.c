@@ -19,7 +19,7 @@ void usage() {
 }
 
 int main(int argc, char *argv[]) {
-    int base_addr = 0x1000;
+    int base_addr = 0;
     char *blck0_file = NULL;
 
     int c;
@@ -64,10 +64,11 @@ int main(int argc, char *argv[]) {
     FILE *in_f = fopen(argv[optind], "r");
     int b;
     int i = base_addr;
-    cpu *m = new_cpu(base_addr);
+    cpu *m = new_cpu();
     while ((b = fgetc(in_f)) != EOF) {
         m->mem[i++] = (uint8_t) b;
     }
+    m->pc = (m->mem[0xFFFD] << 8) | m->mem[0xFFFC];
     main_loop(m);
     return 0;
 }
