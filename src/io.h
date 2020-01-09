@@ -45,5 +45,6 @@ void set_block_source(FILE *source);
 void init_io();
 void finish_io();
 void handle_io(cpu *m);
+void trace_bus(char *msg);
 
 #endif

@@ -1,3 +1,5 @@
+#include <stdint.h>
+
 #ifndef __6502_OPCODES__
 #define __6502_OPCODES__
 
@@ -284,5 +286,7 @@
 
 #define WAI      0xCB
 #define STP 	 0xDB
+
+char* translate_opcode(const uint8_t opcode);
 
 #endif

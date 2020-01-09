@@ -5,7 +5,25 @@
 #include "io.h"
 #include "opcodes.h"
 
-#define NEXT_BYTE(cpu) ((cpu)->mem[(cpu)->pc + (pc_offset++)])
+uint8_t read_byte(cpu *m, uint16_t address) {
+    static char trace_entry[80];
+    sprintf(trace_entry, "%04X r %02X\n", address, m->mem[address]);
+    trace_bus(trace_entry);
+    return m->mem[address];
+}
+
+uint8_t write_byte(cpu *m, uint16_t address, uint8_t value) {
+    static char trace_entry[80];
+    sprintf(trace_entry, "%04X W %02X\n", address, value);
+    trace_bus(trace_entry);
+    return m->mem[address]=value;
+}
+
+uint8_t read_next_byte(cpu *m, uint8_t pc_offset) {
+    return read_byte(m, m->pc + pc_offset);
+}
+
+#define NEXT_BYTE(cpu) (read_next_byte((cpu), pc_offset++))
 
 void main_loop(cpu *m) {
     uint8_t opcode;
@@ -33,7 +51,9 @@ void main_loop(cpu *m) {
         pc_offset = 0;
         branch_offset = 0;
         pc_start = m->pc;
+	m->pc_actual = m->pc;
         opcode = NEXT_BYTE(m);
+	m->opcode = opcode;
 
         switch (opcode) {
             #include "opcode_handlers/arithmetic.h"
@@ -83,5 +103,6 @@ void main_loop(cpu *m) {
         }
     }
 end:
+    handle_io(m);
     finish_io();
 }

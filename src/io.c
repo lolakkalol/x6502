@@ -7,9 +7,25 @@
 #include <sys/time.h>
 
 #include "functions.h"
+#include "opcodes.h"
 
-#define VTERM_ROWS 25
-#define VTERM_COLS 40
+#define MONITOR_ROWS 4
+#define MONITOR_COLS 40
+
+#define MONITOR_HEIGHT (MONITOR_ROWS) + 2
+#define MONITOR_WIDTH (MONITOR_COLS) + 2
+
+#define TRACE_ROWS 20
+#define TRACE_COLS 80
+
+#define TRACE_HEIGHT (TRACE_ROWS) + 2
+#define TRACE_WIDTH (TRACE_COLS) + 2
+
+#define MONITOR_ORIGINX 0
+#define MONITOR_ORIGINY 4
+
+#define TRACE_ORIGINX (MONITOR_ORIGINX)
+#define TRACE_ORIGINY (MONITOR_ORIGINY) + (MONITOR_HEIGHT)
 
 uint8_t io_modeflags = 0x00;
 uint8_t io_supports_paint;
@@ -17,10 +33,10 @@ uint8_t io_supports_paint;
 FILE *blck0 = NULL;
 
 WINDOW *window = NULL;
-
-void init_vterm();
-void update_vterm(cpu *, uint16_t);
-void finish_vterm();
+WINDOW *wnd_monitor = NULL;
+WINDOW *wnd_monitor_content = NULL;
+WINDOW *wnd_trace = NULL;
+WINDOW *wnd_trace_content = NULL;
 
 void set_block_source(FILE *source) {
     blck0 = source;
@@ -41,39 +57,33 @@ void init_io() {
             init_pair(i, i, COLOR_BLACK);
         }
     }
+
+    wnd_monitor = newwin(MONITOR_HEIGHT, MONITOR_WIDTH, MONITOR_ORIGINY, MONITOR_ORIGINX);
+    wnd_monitor_content = newwin(MONITOR_ROWS, MONITOR_COLS, MONITOR_ORIGINY+1, MONITOR_ORIGINX+1);
+    wnd_trace = newwin(TRACE_HEIGHT, TRACE_WIDTH, TRACE_ORIGINY, TRACE_ORIGINX);
+    wnd_trace_content = newwin(TRACE_ROWS, TRACE_COLS, TRACE_ORIGINY+1, TRACE_ORIGINX+1);
+    scrollok(wnd_trace_content, TRUE);
+    refresh();
+    box(wnd_monitor, 0, 0);
+    mvwprintw(wnd_monitor, 0, 1, "CPU-Monitor");
+    box(wnd_trace, 0, 0);
+    mvwprintw(wnd_trace, 0, 1, "Bus-Trace");
+    wrefresh(wnd_monitor);
+    wrefresh(wnd_trace);
 }
 
 void finish_io() {
     if (io_modeflags & IO_MODEFLAG_WAIT_HALT) {
         nodelay(stdscr, FALSE);
         printw("\nterminated, press any key to exit.\n");
-        getch();
+        while(getch() == ERR);
     }
 
-    endwin();
-}
-
-void init_vterm() {
-    window = newwin(VTERM_ROWS + 2, VTERM_COLS + 2, 0, 0);
-    box(window, 0, 0);
-    wrefresh(window);
-}
-
-void finish_vterm() {
     endwin();
 }
 
 void update_modeflags(uint8_t old_flags, uint8_t new_flags) {
     io_modeflags = new_flags;
-
-    // if the vterm flag changed (avoids reinit every time flags change)
-    if ((new_flags ^ old_flags) & IO_MODEFLAG_VTERM) {
-        if (new_flags & IO_MODEFLAG_VTERM) {
-            init_vterm();
-        } else {
-            finish_vterm();
-        }
-    }
 }
 
 void update_paint(uint8_t paint) {
@@ -84,25 +94,62 @@ void update_paint(uint8_t paint) {
             (paint & IO_PAINT_BOLD ? A_BOLD : 0));
 }
 
-void update_vterm(cpu *m, uint16_t dirty) {
-    uint16_t offset = dirty - IO_VTERM_START;
-    if (offset >= 1000) {
-        // this is in the unused 24 bytes at the end of the page, ignore it
-        return;
-    }
-    // 1 offsets to avoid overwriting the border
-    uint8_t r = offset / VTERM_COLS + 1;
-    uint8_t c = offset % VTERM_COLS + 1;
-    mvwprintw(window, r, c, "%c", m->mem[dirty]);
-    wrefresh(window);
+void trace_bus(char *msg) {
+    wprintw(wnd_trace_content, msg);
+    wrefresh(wnd_trace_content);
 }
 
 void handle_io(cpu *m) {
     int read;
-    if ((read = getch()) != ERR) {
-        m->interrupt_waiting = 0x01;
-        m->mem[IO_GETCHAR] = read;
+
+    // start by populating the monitor
+    mvwprintw(wnd_monitor_content, 0, 0, "PC: %04X, OP: %02X (%s)", m->pc_actual, m->opcode, translate_opcode(m->opcode));
+    mvwprintw(wnd_monitor_content, 1, 0, "ACC: %02X, X: %02X, Y: %02X, SP: %02X", m->ac, m->x, m->y, m->sp);
+    mvwprintw(wnd_monitor_content, 2, 0, "SR: %c%c-%c%c%c%c%c",
+      m->sr & 0x80 ? 'N' : '-',
+      m->sr & 0x40 ? 'V' : '-',
+      m->sr & 0x10 ? 'B' : '-',
+      m->sr & 0x08 ? 'D' : '-',
+      m->sr & 0x04 ? 'I' : '-',
+      m->sr & 0x02 ? 'Z' : '-',
+      m->sr & 0x01 ? 'C' : '-');
+    mvwprintw(wnd_monitor_content, 3, 0, "Clock mode: %s", m->clock_mode == CLOCK_FAST ? "FAST" : m->clock_mode == CLOCK_SLOW ? "SLOW" : "STEP");
+    wrefresh(wnd_monitor_content);
+
+    switch (m->clock_mode) {
+      case CLOCK_FAST:
+        halfdelay(1);
+	read = getch();
+	break;
+      case CLOCK_SLOW:
+	halfdelay(10);
+	read = getch();
+	break;
+      case CLOCK_STEP:
+	while ((read = getch()) == ERR);
+	break;
     }
+
+    switch(read) {
+      case ERR:
+	break;
+      case 's':
+      case 'S':
+	break;
+      case 'b':
+      case 'B':
+	m->clock_mode = CLOCK_STEP;
+	break;
+      case 'g':
+	m->clock_mode = CLOCK_SLOW;
+	break;
+      case 'G':
+	m->clock_mode = CLOCK_FAST;
+	break;
+      default:
+        m->interrupt_waiting = 0x01;
+       	m->mem[IO_GETCHAR] = read;
+    } 
 
     if (get_emu_flag(m, EMU_FLAG_DIRTY)) {
         uint16_t addr = m->dirty_mem_addr;
@@ -118,13 +165,10 @@ void handle_io(cpu *m) {
             update_modeflags(io_modeflags, m->mem[IO_MODEFLAGS]);
         } else if (addr == IO_PAINT) {
             update_paint(m->mem[addr]);
-        } else if (IO_VTERM_START <= addr && addr < IO_VTERM_END) {
-            update_vterm(m, addr);
         } else if (addr == IO_BLCK0_ADDRL
                 || addr == IO_BLCK0_ADDRH
                 || addr == IO_BLCK0_READ) {
             if (blck0 == NULL) {
-                finish_vterm();
                 fprintf(stderr, "tried to read from unattached block device\n");
                 exit(-1);
                 return;

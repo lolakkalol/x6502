@@ -19,9 +19,19 @@
 // set if the emulator should wait for an interrupt before continuing
 #define EMU_FLAG_WAIT_FOR_INTERRUPT 0x02
 
+#define CLOCK_FAST 0x01
+#define CLOCK_SLOW 0x02
+#define CLOCK_STEP 0x04
+
 typedef struct {
+    // clock mode
+    uint8_t clock_mode;
     // program counter
     uint16_t pc;
+    // actual value of program counter
+    uint16_t pc_actual;
+    // current opcode
+    uint8_t opcode;
     // index registers
     uint8_t x, y;
     // stack pointer
