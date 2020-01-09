@@ -27,7 +27,7 @@ uint8_t read_next_byte(cpu *m, uint8_t pc_offset) {
 
 void main_loop(cpu *m) {
     uint8_t opcode;
-    uint8_t arg1, arg2, t1;
+    uint8_t arg1, arg2, t1, t2;
     int8_t s1;
     uint16_t r1, r2;
 
@@ -51,9 +51,9 @@ void main_loop(cpu *m) {
         pc_offset = 0;
         branch_offset = 0;
         pc_start = m->pc;
-	m->pc_actual = m->pc;
+        m->pc_actual = m->pc;
         opcode = NEXT_BYTE(m);
-	m->opcode = opcode;
+        m->opcode = opcode;
 
         switch (opcode) {
             #include "opcode_handlers/arithmetic.h"
