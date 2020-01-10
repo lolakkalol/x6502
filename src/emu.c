@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include "functions.h"
 #include "opcodes.h"
+#include "gui.h"
+#include "io.h"
 
 #define NEXT_BYTE(cpu) (read_next_byte((cpu), pc_offset++))
 
@@ -24,6 +26,7 @@ void main_loop(cpu *m) {
     // after we move to the next instruction
     int8_t branch_offset = 0;
 
+    init_gui();
     init_io();
 
     for (;;) {
@@ -66,6 +69,7 @@ void main_loop(cpu *m) {
         m->pc += branch_offset;
 
         do {
+            update_gui(m);
             handle_io(m);
             // clear dirty memory flag immediately so that subsequent runs don't
             // redo whatever I/O operation is associated with the dirty memaddr
@@ -84,6 +88,7 @@ void main_loop(cpu *m) {
         }
     }
 end:
-    handle_io(m);
+    update_gui(m);
     finish_io();
+    finish_gui();
 }

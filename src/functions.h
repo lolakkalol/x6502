@@ -4,7 +4,7 @@
 #include <stdlib.h>
 
 #include "cpu.h"
-#include "io.h"
+#include "gui.h"
 
 static inline uint8_t read_byte(cpu *m, uint16_t address) {
     static char trace_entry[80];
