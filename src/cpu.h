@@ -2,6 +2,7 @@
 #define __6502_CPU__
 
 #include <stdint.h>
+#include <stdbool.h>
 #include "via.h"
 
 #define MEMORY_SIZE 65536
@@ -29,6 +30,8 @@ typedef struct {
     uint8_t clock_mode;
     // program counter
     uint16_t pc;
+    // flag indicating whether instruction set new pc
+    bool pc_set;
     // actual value of program counter
     uint16_t pc_actual;
     // current opcode

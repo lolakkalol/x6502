@@ -20,7 +20,6 @@ void main_loop(cpu *m) {
     // step, we add pc_offset to get the start of the next instruction. if pc !=
     // pc_start, we branched so we don't touch the pc.
     uint8_t pc_offset = 0;
-    uint16_t pc_start;
 
     // branch_offset is an offset that will be added to the program counter
     // after we move to the next instruction
@@ -34,10 +33,10 @@ void main_loop(cpu *m) {
 
         pc_offset = 0;
         branch_offset = 0;
-        pc_start = m->pc;
         m->pc_actual = m->pc;
         opcode = NEXT_BYTE(m);
         m->opcode = opcode;
+        m->pc_set = false;
 
         switch (opcode) {
             #include "opcode_handlers/arithmetic.h"
@@ -63,7 +62,7 @@ void main_loop(cpu *m) {
                 goto end;
         }
 
-        if (m->pc == pc_start) {
+        if (!m->pc_set) {
             m->pc += pc_offset;
         }
         m->pc += branch_offset;
@@ -83,7 +82,7 @@ void main_loop(cpu *m) {
             STACK_PUSH(m, m->sr);
 
             m->interrupt_waiting = 0x00;
-            m->pc = mem_abs(m->mem[0xFFFE], m->mem[0xFFFF], 0);
+            set_pc(m, mem_abs(m->mem[0xFFFE], m->mem[0xFFFF], 0));
             m->sr |= FLAG_INTERRUPT;
         }
     }

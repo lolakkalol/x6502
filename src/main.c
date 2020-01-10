@@ -54,7 +54,7 @@ int main(int argc, char *argv[]) {
         m->mem[i++] = (uint8_t) b;
     }
     fclose(in_f);
-    m->pc = (m->mem[0xFFFD] << 8) | m->mem[0xFFFC];
+    set_pc(m, (m->mem[0xFFFD] << 8) | m->mem[0xFFFC]);
     main_loop(m);
     destroy_cpu(m);
     return 0;

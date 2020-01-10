@@ -48,7 +48,7 @@ loop_data:
   inx                      ; Increase counter
   jmp loop_data
 end_prog:
-  stp
+  jmp end_prog
 
 lcd_init_sequence:
   byte %00111100
@@ -58,7 +58,7 @@ lcd_init_sequence:
   byte %00000000
  
 data:
-  byte "Merry Christmas!",$00
+  string "Merry Christmas!"
 
   .org RESET_VECTOR
   word init

@@ -6,7 +6,7 @@ case BRK:
 case RTI:
     m->sr = STACK_POP(m);
     arg1 = STACK_POP(m);
-    m->pc = mem_abs(arg1, STACK_POP(m), 0);
+    set_pc(m, mem_abs(arg1, STACK_POP(m), 0));
     break;
 
 case WAI:

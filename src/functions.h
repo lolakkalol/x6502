@@ -24,6 +24,11 @@ static inline uint8_t read_next_byte(cpu *m, uint8_t pc_offset) {
     return read_byte(m, m->pc + pc_offset);
 }
 
+static inline void set_pc(cpu *m, uint16_t address) {
+    m->pc = address;
+    m->pc_set = true;
+}
+
 #define ZP(x) ((uint8_t) (x))
 //#define STACK_PUSH(m) (m)->mem[(m)->sp-- + STACK_START]
 #define STACK_PUSH(m, v) (write_byte(m, m->sp-- + STACK_START, v)) 

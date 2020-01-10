@@ -8,6 +8,7 @@ cpu * new_cpu() {
     m->clock_mode = CLOCK_STEP;
     m->opcode = 0;
     m->pc = 0;
+    m->pc_set = false;
     m->pc_actual = 0;
     m->sr = FLAG_INTERRUPT;
     m->sp = 0xFF;
