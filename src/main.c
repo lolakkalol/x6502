@@ -14,17 +14,17 @@ void usage() {
     printf("x6502: a simple 65C02/65C22 emulator\n");
     printf("usage: x6502 [OPTION]... FILE\n");
     printf("options:\n");
-    printf("\t-b addr\t\tthe base address at which code will be loaded\n");
+    printf("  -b ADDR the base address at which code will be loaded (in hex, default 8000)\n");
 }
 
 int main(int argc, char *argv[]) {
-    int base_addr = 0;
+    int base_addr = 0x8000;
 
     int c;
     while ((c = getopt(argc, argv, "hb:")) != -1) {
         switch (c) {
         case 'b':
-            base_addr = atoi(optarg);
+            base_addr = strtol(optarg, NULL, 16);
             break;
 
         case 'h':

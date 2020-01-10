@@ -1,2 +1,2 @@
 #!/bin/bash
-../../x6502 -b 32768 lcd_test.bin
+../../x6502 lcd_test.bin
