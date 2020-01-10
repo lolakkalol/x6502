@@ -152,8 +152,20 @@ void update_gui(cpu *m) {
           m->mem[(memory_start << 8) + off16 * 0x10 + offset] : '.');          
       }
     }
-
     wrefresh(wnd_memory_content);
+
+    // populate ports monitor
+    uint8_t bitmask = 0x01;
+    for (int bit=0; bit<8; bit++) {      
+      mvwprintw(wnd_portmon_content, 0, bit+2, "%d", bit);
+      mvwprintw(wnd_portmon_content, 1, bit+2, "%c", m->mem[VIA1_DDRA] & bitmask ? 'O' : 'i');
+      mvwprintw(wnd_portmon_content, 2, bit+2, "%c", m->mem[VIA1_PORTA] & bitmask ? '1' : '0');
+      mvwprintw(wnd_portmon_content, 0, bit+12, "%d", bit);
+      mvwprintw(wnd_portmon_content, 1, bit+12, "%c", m->mem[VIA1_DDRB] & bitmask ? 'O' : 'i');
+      mvwprintw(wnd_portmon_content, 2, bit+12, "%c", m->mem[VIA1_PORTB] & bitmask ? '1' : '0');
+      bitmask = bitmask << 1;
+    }
+    wrefresh(wnd_portmon_content);
 
     switch (m->clock_mode) {
       case CLOCK_FAST:
