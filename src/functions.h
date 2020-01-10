@@ -4,25 +4,49 @@
 #include <stdlib.h>
 
 #include "cpu.h"
+#include "io.h"
+
+static inline uint8_t read_byte(cpu *m, uint16_t address) {
+    static char trace_entry[80];
+    sprintf(trace_entry, "%04X r %02X\n", address, m->mem[address]);
+    trace_bus(trace_entry);
+    return m->mem[address];
+}
+
+static inline uint8_t write_byte(cpu *m, uint16_t address, uint8_t value) {
+    static char trace_entry[80];
+    sprintf(trace_entry, "%04X W %02X\n", address, value);
+    trace_bus(trace_entry);
+    return m->mem[address]=value;
+}
+
+static inline uint8_t read_next_byte(cpu *m, uint8_t pc_offset) {
+    return read_byte(m, m->pc + pc_offset);
+}
 
 #define ZP(x) ((uint8_t) (x))
-#define STACK_PUSH(m) (m)->mem[(m)->sp-- + STACK_START]
-#define STACK_POP(m) (m)->mem[++(m)->sp + STACK_START]
+//#define STACK_PUSH(m) (m)->mem[(m)->sp-- + STACK_START]
+#define STACK_PUSH(m, v) (write_byte(m, m->sp-- + STACK_START, v)) 
+//#define STACK_POP(m) (m)->mem[++(m)->sp + STACK_START]
+#define STACK_POP(m) (read_byte(m, ++(m)->sp + STACK_START))
 
 static inline size_t mem_abs(uint8_t low, uint8_t high, uint8_t off) {
     return (uint16_t) off + (uint16_t) low + ((uint16_t) high << 8);
 }
 
 static inline size_t mem_indirect_index(cpu *m, uint8_t addr, uint8_t off) {
-    return mem_abs(m->mem[addr], m->mem[addr+1], off);
+//    return mem_abs(m->mem[addr], m->mem[addr+1], off);
+    return mem_abs(read_byte(m, addr), read_byte(m, addr+1), off);
 }
 
 static inline size_t mem_indexed_indirect(cpu *m, uint8_t addr, uint8_t off) {
-    return mem_abs(m->mem[addr+off], m->mem[addr+off+1], 0);
+//    return mem_abs(m->mem[addr+off], m->mem[addr+off+1], 0);
+    return mem_abs(read_byte(m, addr+off), read_byte(m, addr+off+1), 0);
 }
 
 static inline size_t mem_indirect_zp(cpu *m, uint8_t addr) {
-    return mem_abs(m->mem[addr], m->mem[addr + 1], 0);
+//    return mem_abs(m->mem[addr], m->mem[addr + 1], 0);
+    return mem_abs(read_byte(m, addr), read_byte(m, addr+1), 0);
 }
 
 // set arg MUST be 16 bits, not 8, so that add results can fit into set.

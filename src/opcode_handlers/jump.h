@@ -20,8 +20,8 @@ case JSR_AB:
     // we push the address of the byte immediately before where we want to
     // return to because reasons:
     r2 = m->pc + pc_offset - 1;
-    STACK_PUSH(m) = (r2 & 0xFF00) >> 8;
-    STACK_PUSH(m) = r2 & 0xFF;
+    STACK_PUSH(m, (r2 & 0xFF00) >> 8);
+    STACK_PUSH(m, r2 & 0xFF);
     m->pc = r1;
     break;
 

@@ -2,26 +2,7 @@
 
 #include <stdio.h>
 #include "functions.h"
-#include "io.h"
 #include "opcodes.h"
-
-uint8_t read_byte(cpu *m, uint16_t address) {
-    static char trace_entry[80];
-    sprintf(trace_entry, "%04X r %02X\n", address, m->mem[address]);
-    trace_bus(trace_entry);
-    return m->mem[address];
-}
-
-uint8_t write_byte(cpu *m, uint16_t address, uint8_t value) {
-    static char trace_entry[80];
-    sprintf(trace_entry, "%04X W %02X\n", address, value);
-    trace_bus(trace_entry);
-    return m->mem[address]=value;
-}
-
-uint8_t read_next_byte(cpu *m, uint8_t pc_offset) {
-    return read_byte(m, m->pc + pc_offset);
-}
 
 #define NEXT_BYTE(cpu) (read_next_byte((cpu), pc_offset++))
 
@@ -93,9 +74,9 @@ void main_loop(cpu *m) {
                  !m->interrupt_waiting);
 
         if (m->interrupt_waiting && !get_flag(m, FLAG_INTERRUPT)) {
-            STACK_PUSH(m) = (m->pc & 0xFF00) >> 8;
-            STACK_PUSH(m) = m->pc & 0xFF;
-            STACK_PUSH(m) = m->sr;
+            STACK_PUSH(m, (m->pc & 0xFF00) >> 8);
+            STACK_PUSH(m, m->pc & 0xFF);
+            STACK_PUSH(m, m->sr);
 
             m->interrupt_waiting = 0x00;
             m->pc = mem_abs(m->mem[0xFFFE], m->mem[0xFFFF], 0);

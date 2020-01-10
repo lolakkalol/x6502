@@ -1,9 +1,9 @@
 case PHA:
-    STACK_PUSH(m) = m->ac;
+    STACK_PUSH(m, m->ac);
     break;
 
 case PHP:
-    STACK_PUSH(m) = m->sr;
+    STACK_PUSH(m, m->sr);
     break;
 
 case PLA:
@@ -15,11 +15,11 @@ case PLP:
     break;
 
 case PHX:
-	STACK_PUSH(m) = m->x;
+	STACK_PUSH(m, m->x);
     break;
 
 case PHY:
-	STACK_PUSH(m) = m->y;
+	STACK_PUSH(m, m->y);
     break;
 
 case PLX:
