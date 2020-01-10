@@ -80,6 +80,7 @@ void init_io() {
         start_color();
         for (int i = 0; i < 8; i++) {
             init_pair(i, i, COLOR_BLACK);
+            init_pair(i+8, i, COLOR_WHITE);
         }
     }
 
@@ -94,13 +95,17 @@ void init_io() {
     scrollok(wnd_trace_content, TRUE);
     refresh();
     box(wnd_monitor, 0, 0);
-    mvwprintw(wnd_monitor, 0, 1, "CPU Monitor");
+    wcolor_set(wnd_monitor, 8, NULL);
+    mvwprintw(wnd_monitor, 0, 1, " CPU Monitor ");
     box(wnd_portmon, 0, 0);
-    mvwprintw(wnd_portmon, 0, 1, "Ports Monitor");
+    wcolor_set(wnd_portmon, 8, NULL);
+    mvwprintw(wnd_portmon, 0, 1, " Ports Monitor ");
     box(wnd_trace, 0, 0);
-    mvwprintw(wnd_trace, 0, 1, "Bus Trace");
+    wcolor_set(wnd_trace, 8, NULL);
+    mvwprintw(wnd_trace, 0, 1, " Bus Trace ");
     box(wnd_memory, 0, 0);
-    mvwprintw(wnd_memory, 0, 1, "Memory");
+    wcolor_set(wnd_memory, 8, NULL);
+    mvwprintw(wnd_memory, 0, 1, " Memory  ");
     wrefresh(wnd_monitor);
     wrefresh(wnd_portmon);
     wrefresh(wnd_trace);
@@ -155,7 +160,7 @@ void handle_io(cpu *m) {
       wrefresh(wnd_monitor_content);
 
       // populate memory monitor
-      mvwprintw(wnd_memory, 0, 8, "%04x - %04x", (memory_start << 8), (memory_start << 8) + 0x01FF);
+      mvwprintw(wnd_memory, 0, 10, "%04x:%04x ", (memory_start << 8), (memory_start << 8) + 0x01FF);
       wrefresh(wnd_memory);
 
       for (int off16=0; off16<32; off16++) {
