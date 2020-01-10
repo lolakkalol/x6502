@@ -1,4 +1,5 @@
 #include "cpu.h"
+#include "via.h"
 #include <stdlib.h>
 #include <string.h>
 
@@ -12,5 +13,11 @@ cpu * new_cpu() {
     m->sp = 0xFF;
     m->interrupt_waiting = 0x00;
     memset(m->mem, 0xFF, MEMORY_SIZE);
+    m->v1 = new_via();
     return m;
+}
+
+void destroy_cpu(cpu* m) {
+  destroy_via(m->v1);
+  free(m);
 }

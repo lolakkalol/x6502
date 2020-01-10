@@ -11,7 +11,7 @@
 #include <unistd.h>
 
 void usage() {
-    printf("x6502: a simple 6502 emulator\n");
+    printf("x6502: a simple 65C02/65C22 emulator\n");
     printf("usage: x6502 [OPTION]... FILE\n");
     printf("options:\n");
     printf("\t-b addr\t\tthe base address at which code will be loaded\n");
@@ -56,5 +56,6 @@ int main(int argc, char *argv[]) {
     fclose(in_f);
     m->pc = (m->mem[0xFFFD] << 8) | m->mem[0xFFFC];
     main_loop(m);
+    destroy_cpu(m);
     return 0;
 }

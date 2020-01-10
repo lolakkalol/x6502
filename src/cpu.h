@@ -2,6 +2,7 @@
 #define __6502_CPU__
 
 #include <stdint.h>
+#include "via.h"
 
 #define MEMORY_SIZE 65536
 #define STACK_START 0x0100
@@ -48,8 +49,12 @@ typedef struct {
     uint8_t mem[MEMORY_SIZE];
     // stores the address of memory modified by the last instruction
     uint16_t dirty_mem_addr;
+    // VIA1 subsystem
+    via* v1;
 } cpu;
 
 cpu * new_cpu();
+
+void destroy_cpu(cpu* m);
 
 #endif

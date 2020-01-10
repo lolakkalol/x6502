@@ -174,18 +174,16 @@ void update_gui(cpu *m) {
     switch(read) {
       case ERR:
         break;
-      case 's':
-      case 'S':
+      case KEY_F(5): // F5
         keep_going = true;
         break;
-      case 'b':
-      case 'B':
+      case KEY_F(6): // F6
         m->clock_mode = CLOCK_STEP;
         break;
-      case 'g':
+      case KEY_F(7): // F7
         m->clock_mode = CLOCK_SLOW;
         break;
-      case 'G':
+      case KEY_F(8): // F8
         m->clock_mode = CLOCK_FAST;
         break;
       case '[':
@@ -196,6 +194,8 @@ void update_gui(cpu *m) {
       case '{':
         if (memory_start > 0x10) {
           memory_start-=0x10;
+        } else {
+          memory_start = 0;
         }
         break;
       case ']':
@@ -206,6 +206,8 @@ void update_gui(cpu *m) {
       case '}':
         if (memory_start < (0xff-0x10)) {
           memory_start+=0x10;
+        } else {
+          memory_start = 0xfe;
         }
         break;
       default:
