@@ -1,4 +1,5 @@
 #ifndef __6502_IO__
+#define __6502_IO__
 
 #include <stdio.h>
 
@@ -24,6 +25,6 @@
 
 void init_io();
 void finish_io();
-void handle_io(cpu *m);
+void handle_io(cpu *m, bool rwb);
 
 #endif

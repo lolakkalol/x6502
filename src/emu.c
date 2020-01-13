@@ -31,6 +31,9 @@ void main_loop(cpu *m) {
     for (;;) {
         reset_emu_flags(m);
 
+        // read IO data
+        handle_io(m, true);
+
         pc_offset = 0;
         branch_offset = 0;
         m->pc_actual = m->pc;
@@ -68,8 +71,9 @@ void main_loop(cpu *m) {
         m->pc += branch_offset;
 
         do {
+            // update IO data            
+            handle_io(m, false);
             update_gui(m);
-            handle_io(m);
             // clear dirty memory flag immediately so that subsequent runs don't
             // redo whatever I/O operation is associated with the dirty memaddr
             m->emu_flags &= ~EMU_FLAG_DIRTY;

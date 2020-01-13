@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include "via.h"
+#include "lcd.h"
 
 #define MEMORY_SIZE 65536
 #define STACK_START 0x0100
@@ -54,6 +55,8 @@ typedef struct {
     uint16_t dirty_mem_addr;
     // VIA1 subsystem
     via* v1;
+    // LCD
+    lcd* l;
 } cpu;
 
 cpu * new_cpu();

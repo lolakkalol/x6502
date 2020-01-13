@@ -15,10 +15,12 @@ cpu * new_cpu() {
     m->interrupt_waiting = 0x00;
     memset(m->mem, 0xFF, MEMORY_SIZE);
     m->v1 = new_via();
+    m->l = new_lcd();
     return m;
 }
 
 void destroy_cpu(cpu* m) {
   destroy_via(m->v1);
+  destroy_lcd(m->l);
   free(m);
 }
