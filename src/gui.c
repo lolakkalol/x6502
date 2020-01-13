@@ -245,17 +245,17 @@ void update_gui(cpu *m) {
           keep_going = true;
           break;
         case KEY_F(6): // F6
-          if (!m->clock_mode == CLOCK_SPRINT) {
+          if (!(m->clock_mode == CLOCK_SPRINT)) {
             m->clock_mode = CLOCK_STEP;
           }
           break;
         case KEY_F(7): // F7
-          if (!m->clock_mode == CLOCK_SPRINT) {
+          if (!(m->clock_mode == CLOCK_SPRINT)) {
             m->clock_mode = CLOCK_SLOW;
           }
           break;
         case KEY_F(8): // F8
-          if (!m->clock_mode == CLOCK_SPRINT) {
+          if (!(m->clock_mode == CLOCK_SPRINT)) {
             m->clock_mode = CLOCK_FAST;
           }
           break;
