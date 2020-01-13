@@ -54,9 +54,13 @@
 #define MEMORY_ORIGINX (TRACE_ORIGINX) + (TRACE_WIDTH)
 #define MEMORY_ORIGINY (MONITOR_ORIGINY)
 
+#define CYCLES_SKIP 50
+
 uint8_t io_supports_paint;
 
 uint8_t memory_start = 0x00;
+
+int input_cycle_skip = 0; 
 
 WINDOW *window = NULL;
 WINDOW *wnd_lcd = NULL;
@@ -138,7 +142,7 @@ void update_gui(cpu *m) {
   int read;
   bool keep_going = false;
 
-  while (!keep_going) {
+  do {
 
     // update LCD contents
     if (!(m->l->initialized)) {
@@ -205,65 +209,79 @@ void update_gui(cpu *m) {
     }
     wrefresh(wnd_portmon_content);
 
-    switch (m->clock_mode) {
-      case CLOCK_FAST:
-        halfdelay(1);
-        read = getch();
-        keep_going = true;
-        break;
-      case CLOCK_SLOW:
-        halfdelay(10);
-        read = getch();
-        keep_going = true;
-        break;
-      case CLOCK_STEP:
-        while ((read = getch()) == ERR);
-        break;
-    }
+    if (m->clock_mode == CLOCK_SPRINT && input_cycle_skip < CYCLES_SKIP) 
+    {      
+      input_cycle_skip++;      
+    } else {      
+      input_cycle_skip=0;
 
-    switch(read) {
-      case ERR:
-        break;
-      case KEY_F(5): // F5
-        keep_going = true;
-        break;
-      case KEY_F(6): // F6
-        m->clock_mode = CLOCK_STEP;
-        break;
-      case KEY_F(7): // F7
-        m->clock_mode = CLOCK_SLOW;
-        break;
-      case KEY_F(8): // F8
-        m->clock_mode = CLOCK_FAST;
-        break;
-      case '[':
-        if (memory_start > 0x00) {
-          memory_start--;
-        }
-        break;
-      case '{':
-        if (memory_start > 0x10) {
-          memory_start-=0x10;
-        } else {
-          memory_start = 0;
-        }
-        break;
-      case ']':
-        if (memory_start < (0xff-0x01)) {
-          memory_start++;
-        }
-        break;
-      case '}':
-        if (memory_start < (0xff-0x10)) {
-          memory_start+=0x10;
-        } else {
-          memory_start = 0xfe;
-        }
-        break;
-      default:
-        m->interrupt_waiting = 0x01;
-        m->mem[IO_GETCHAR] = read;
-        keep_going = true;
-    } 
-  }
+      switch (m->clock_mode) {
+        case CLOCK_SPRINT:
+        case CLOCK_FAST:
+          halfdelay(1);
+          read = getch();
+          keep_going = true;
+          break;
+        case CLOCK_SLOW:
+          halfdelay(10);
+          read = getch();
+          keep_going = true;
+          break;
+        case CLOCK_STEP:
+          while ((read = getch()) == ERR);
+          break;
+      }
+
+      switch(read) {
+        case ERR:
+          break;
+        case KEY_F(5): // F5
+          keep_going = true;
+          break;
+        case KEY_F(6): // F6
+          if (!m->clock_mode == CLOCK_SPRINT) {
+            m->clock_mode = CLOCK_STEP;
+          }
+          break;
+        case KEY_F(7): // F7
+          if (!m->clock_mode == CLOCK_SPRINT) {
+            m->clock_mode = CLOCK_SLOW;
+          }
+          break;
+        case KEY_F(8): // F8
+          if (!m->clock_mode == CLOCK_SPRINT) {
+            m->clock_mode = CLOCK_FAST;
+          }
+          break;
+        case '[':
+          if (memory_start > 0x00) {
+            memory_start--;
+          }
+          break;
+        case '{':
+          if (memory_start > 0x10) {
+            memory_start-=0x10;
+          } else {
+            memory_start = 0;
+          }
+          break;
+        case ']':
+          if (memory_start < (0xff-0x01)) {
+            memory_start++;
+          }
+          break;
+        case '}':
+          if (memory_start < (0xff-0x10)) {
+            memory_start+=0x10;
+          } else {
+            memory_start = 0xfe;
+          }
+          break;
+        default:
+          m->interrupt_waiting = 0x01;
+          m->mem[IO_GETCHAR] = read;
+          keep_going = true;
+      } 
+    }
+  } while (!keep_going && m->clock_mode != CLOCK_SPRINT);
 }

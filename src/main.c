@@ -8,6 +8,7 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <unistd.h>
 
 void usage() {
@@ -19,9 +20,10 @@ void usage() {
 
 int main(int argc, char *argv[]) {
     int base_addr = 0x8000;
+    bool sprint = false;
 
     int c;
-    while ((c = getopt(argc, argv, "hb:")) != -1) {
+    while ((c = getopt(argc, argv, "hb:r")) != -1) {
         switch (c) {
         case 'b':
             base_addr = strtol(optarg, NULL, 16);
@@ -30,6 +32,10 @@ int main(int argc, char *argv[]) {
         case 'h':
             usage();
             return 0;
+
+        case 'r':
+            sprint=true;
+            break;
 
         case '?':
             if (optopt == 'b') {
@@ -50,6 +56,9 @@ int main(int argc, char *argv[]) {
     int b;
     int i = base_addr;
     cpu *m = new_cpu();
+    if (sprint) {
+      m->clock_mode = CLOCK_SPRINT;
+    }
     while ((b = fgetc(in_f)) != EOF) {
         m->mem[i++] = (uint8_t) b;
     }

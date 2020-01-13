@@ -22,9 +22,10 @@
 // set if the emulator should wait for an interrupt before continuing
 #define EMU_FLAG_WAIT_FOR_INTERRUPT 0x02
 
-#define CLOCK_FAST 0x01
-#define CLOCK_SLOW 0x02
-#define CLOCK_STEP 0x04
+#define CLOCK_SPRINT 0x00
+#define CLOCK_FAST   0x01
+#define CLOCK_SLOW   0x02
+#define CLOCK_STEP   0x04
 
 typedef struct {
     // clock mode
@@ -57,6 +58,8 @@ typedef struct {
     via* v1;
     // LCD
     lcd* l;
+    // noninteractive mode
+    bool noninteractive;
 } cpu;
 
 cpu * new_cpu();
