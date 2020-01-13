@@ -45,9 +45,21 @@ void handle_io(cpu *m, bool rwb) {
       }
     }
   } else {
+    uint8_t old_porta_input = m->v1->porta & ~m->v1->ddra;
+
     m->v1->portb &= m->v1->ddrb;
     m->v1->portb |= (m->l->data & ~m->v1->ddrb);
     m->v1->porta &= m->v1->ddra;
+    m->v1->porta |= m->k->key_enter ? 0x01 : 0;
+    m->v1->porta |= m->k->key_up ? 0x02 : 0;
+    m->v1->porta |= m->k->key_down ? 0x04 : 0;
+    m->v1->porta |= m->k->key_left ? 0x08 : 0;
+    m->v1->porta |= m->k->key_right ? 0x10 : 0;
+
+    if (old_porta_input != (m->v1->porta & ~m->v1->ddra)) {
+      m->interrupt_waiting = 0x01;
+    }
+
     // read operation
     m->mem[0x6000] = m->v1->portb;
     m->mem[0x6001] = m->v1->porta;

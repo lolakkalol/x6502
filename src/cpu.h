@@ -5,6 +5,7 @@
 #include <stdbool.h>
 #include "via.h"
 #include "lcd.h"
+#include "keys.h"
 
 #define MEMORY_SIZE 65536
 #define STACK_START 0x0100
@@ -58,8 +59,8 @@ typedef struct {
     via* v1;
     // LCD
     lcd* l;
-    // noninteractive mode
-    bool noninteractive;
+    // keys
+    keys* k;
 } cpu;
 
 cpu * new_cpu();

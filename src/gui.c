@@ -215,6 +215,12 @@ void update_gui(cpu *m) {
     } else {      
       input_cycle_skip=0;
 
+      m->k->key_up=false;
+      m->k->key_down=false;
+      m->k->key_left=false;
+      m->k->key_right=false;
+      m->k->key_enter=false;
+
       switch (m->clock_mode) {
         case CLOCK_SPRINT:
         case CLOCK_FAST:
@@ -253,6 +259,26 @@ void update_gui(cpu *m) {
             m->clock_mode = CLOCK_FAST;
           }
           break;
+        case 10:
+          m->k->key_enter = true;
+          keep_going = true;
+          break;
+        case KEY_UP:
+          m->k->key_up = true;
+          keep_going = true;
+          break;
+        case KEY_DOWN:
+          m->k->key_down = true;
+          keep_going = true;
+          break;
+        case KEY_LEFT:
+          m->k->key_left = true;
+          keep_going = true;
+          break;
+        case KEY_RIGHT:
+          m->k->key_right = true;
+          keep_going = true;
+          break;
         case '[':
           if (memory_start > 0x00) {
             memory_start--;
@@ -277,10 +303,6 @@ void update_gui(cpu *m) {
             memory_start = 0xfe;
           }
           break;
-        default:
-          m->interrupt_waiting = 0x01;
-          m->mem[IO_GETCHAR] = read;
-          keep_going = true;
       } 
     }
   } while (!keep_going && m->clock_mode != CLOCK_SPRINT);
