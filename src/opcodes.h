@@ -288,5 +288,6 @@
 #define STP 	 0xDB
 
 char* translate_opcode(const uint8_t opcode);
+uint8_t translate_opcode_cycles(const uint8_t opcode);
 
 #endif

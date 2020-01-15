@@ -70,6 +70,8 @@ void main_loop(cpu *m) {
         }
         m->pc += branch_offset;
 
+        m->cycle+=translate_opcode_cycles(opcode);
+
         do {
             // update IO data            
             handle_io(m, false);

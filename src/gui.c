@@ -171,14 +171,15 @@ void update_gui(cpu *m) {
     // start by populating the monitor
     mvwprintw(wnd_monitor_content, 0, 0, "PC: %04x, OP: %02x (%s)", m->pc_actual, m->opcode, translate_opcode(m->opcode));
     mvwprintw(wnd_monitor_content, 1, 0, "ACC: %02x, X: %02x, Y: %02x, SP: %02x", m->ac, m->x, m->y, m->sp);
-    mvwprintw(wnd_monitor_content, 2, 0, "SR: %c%c-%c%c%c%c%c",
+    mvwprintw(wnd_monitor_content, 2, 0, "SR: %c%c-%c%c%c%c%c, cycle: %08x",
       m->sr & 0x80 ? 'N' : '-',
       m->sr & 0x40 ? 'V' : '-',
       m->sr & 0x10 ? 'B' : '-',
       m->sr & 0x08 ? 'D' : '-',
       m->sr & 0x04 ? 'I' : '-',
       m->sr & 0x02 ? 'Z' : '-',
-      m->sr & 0x01 ? 'C' : '-');
+      m->sr & 0x01 ? 'C' : '-',
+      m->cycle);
     mvwprintw(wnd_monitor_content, 3, 0, "Clock mode: %s", m->clock_mode == CLOCK_FAST ? "FAST" : m->clock_mode == CLOCK_SLOW ? "SLOW" : "STEP");
     wrefresh(wnd_monitor_content);
 

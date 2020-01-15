@@ -55,6 +55,8 @@ typedef struct {
     uint8_t mem[MEMORY_SIZE];
     // stores the address of memory modified by the last instruction
     uint16_t dirty_mem_addr;
+    // cycle counter
+    uint32_t cycle;
     // VIA1 subsystem
     via* v1;
     // LCD

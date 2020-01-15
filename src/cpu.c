@@ -17,6 +17,7 @@ cpu * new_cpu() {
     m->v1 = new_via();
     m->l = new_lcd();
     m->k = new_keys();
+    m->cycle = 0;
     return m;
 }
 
