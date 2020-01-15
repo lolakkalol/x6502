@@ -53,6 +53,11 @@ int main(int argc, char *argv[]) {
     }
 
     FILE *in_f = fopen(argv[optind], "r");
+    if (in_f == NULL) {
+        printf("Invalid input file specified\n");
+        usage();
+        return -1;
+    }
     int b;
     int i = base_addr;
     cpu *m = new_cpu();
