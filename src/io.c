@@ -23,7 +23,7 @@ void handle_io(cpu *m, bool rwb) {
     if (get_emu_flag(m, EMU_FLAG_DIRTY)) {
       uint16_t addr = m->dirty_mem_addr;
 
-      if ((addr & 0x6000) && !(addr & 0x8000)) {
+      if ((addr & 0x4000) && (addr & 0x2000) && !(addr & 0x8000)) {
         switch (addr & 0x0f) {
         case 0x00:
           m->v1->portb &= (~m->v1->ddrb);

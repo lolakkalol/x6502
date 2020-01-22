@@ -35,8 +35,8 @@
 
 #define LCD_MEM_SIZE          0x100
 
-#define LCD_ROWS              2
-#define LCD_COLS              16
+#define LCD_ROWS              4
+#define LCD_COLS              20
 
 typedef struct {
   // settings
