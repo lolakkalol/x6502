@@ -57,6 +57,8 @@ typedef struct {
     uint16_t dirty_mem_addr;
     // cycle counter
     uint32_t cycle;
+    //
+    bool lcd_8_bit;
     // VIA1 subsystem
     via* v1;
     // LCD

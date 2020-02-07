@@ -16,14 +16,17 @@ void usage() {
     printf("usage: x6502 [OPTION]... FILE\n");
     printf("options:\n");
     printf("  -b ADDR the base address at which code will be loaded (in hex, default 8000)\n");
+    printf("  -r run as fast as possible\n");
+    printf("  -4 use 4-bit mode for LCD\n");
 }
 
 int main(int argc, char *argv[]) {
     int base_addr = 0x8000;
     bool sprint = false;
+    bool lcd_8_bit = true;
 
     int c;
-    while ((c = getopt(argc, argv, "hb:r")) != -1) {
+    while ((c = getopt(argc, argv, "hb:r4")) != -1) {
         switch (c) {
         case 'b':
             base_addr = strtol(optarg, NULL, 16);
@@ -35,6 +38,10 @@ int main(int argc, char *argv[]) {
 
         case 'r':
             sprint=true;
+            break;
+
+        case '4':
+            lcd_8_bit=false;
             break;
 
         case '?':
@@ -64,6 +71,7 @@ int main(int argc, char *argv[]) {
     if (sprint) {
       m->clock_mode = CLOCK_SPRINT;
     }
+    m->lcd_8_bit=lcd_8_bit;
     while ((b = fgetc(in_f)) != EOF) {
         m->mem[i++] = (uint8_t) b;
     }
