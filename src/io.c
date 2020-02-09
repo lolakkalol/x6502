@@ -44,7 +44,7 @@ void handle_io(cpu *m, bool rwb) {
         if (m->lcd_8_bit) {
           process_input(m->l, m->v1->porta & 0x80, m->v1->porta & 0x40, m->v1->porta & 0x20, m->v1->portb);
         } else {
-          process_input(m->l, m->v1->portb & 0x40, m->v1->portb & 0x20, m->v1->portb & 0x10, (m->v1->portb & 0x0f) << 4);
+          process_input(m->l, m->v1->portb & 0x08, m->v1->portb & 0x04, m->v1->portb & 0x02, m->v1->portb & 0xf0);
         }
       }
     }
